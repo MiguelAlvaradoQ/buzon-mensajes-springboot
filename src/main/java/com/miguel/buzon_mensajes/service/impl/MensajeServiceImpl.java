@@ -23,17 +23,14 @@ public class MensajeServiceImpl implements MensajeService {
 
     @Override
     public MensajeResponseDTO crear(MensajeRequestDTO request) {
-        // 1. Convertir RequestDTO a Entidad
         Mensaje mensaje = new Mensaje();
         mensaje.setNombre(request.getNombre());
         mensaje.setEmail(request.getEmail());
         mensaje.setContenido(request.getContenido());
         mensaje.setLeido(false);
 
-        // 2. Guardar en BD
         Mensaje guardado = mensajeRepository.save(mensaje);
 
-        // 3. Convertir Entidad a ResponseDTO y devolver
         return convertirAResponseDTO(guardado);
     }
 
@@ -98,7 +95,7 @@ public class MensajeServiceImpl implements MensajeService {
         return mensajeRepository.countByLeido(false);
     }
 
-    // Método privado para convertir Entidad a ResponseDTO
+
     private MensajeResponseDTO convertirAResponseDTO(Mensaje mensaje) {
         MensajeResponseDTO dto = new MensajeResponseDTO();
         dto.setId(mensaje.getId());
