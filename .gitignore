@@ -1,0 +1,85 @@
+HELP.md
+############################
+# MAVEN
+############################
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+############################
+# GRADLE
+############################
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+############################
+# SPRING BOOT
+############################
+*.log
+*.pid
+*.gz
+spring-boot-*.log
+
+############################
+# IDE - IntelliJ IDEA
+############################
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+############################
+# IDE - VS Code
+############################
+.vscode/
+.code-workspace
+
+############################
+# IDE - Eclipse
+############################
+.settings/
+.project
+.classpath
+.factorypath
+bin/
+
+############################
+# SISTEMA OPERATIVO
+############################
+.DS_Store
+Thumbs.db
+desktop.ini
+
+############################
+# SECRETS (¡IMPORTANTE!)
+############################
+application-secrets.properties
+.env
+*.key
+*.pem
+
+############################
+# BASE DE DATOS
+############################
+*.db
+*.sqlite
+*.h2.db
+
+############################
+# TEMPORAL
+############################
+*.tmp
+*.bak
+*.swp
+*~.nib
