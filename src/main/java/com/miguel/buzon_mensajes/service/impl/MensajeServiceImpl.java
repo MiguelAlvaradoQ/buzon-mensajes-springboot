@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.miguel.buzon_mensajes.exception.MensajeNotFoundException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,7 +50,7 @@ public class MensajeServiceImpl implements MensajeService {
     @Transactional(readOnly = true)
     public MensajeResponseDTO obtenerPorId(Long id) {
         Mensaje mensaje = mensajeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Mensaje no encontrado con ID: " + id));
+                .orElseThrow(() -> new MensajeNotFoundException(id));
 
         return convertirAResponseDTO(mensaje);
     }
@@ -74,7 +76,7 @@ public class MensajeServiceImpl implements MensajeService {
     @Override
     public MensajeResponseDTO marcarComoLeido(Long id) {
         Mensaje mensaje = mensajeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Mensaje no encontrado con ID: " + id));
+                .orElseThrow(() -> new MensajeNotFoundException(id));
 
         mensaje.setLeido(true);
         Mensaje actualizado = mensajeRepository.save(mensaje);
@@ -85,7 +87,7 @@ public class MensajeServiceImpl implements MensajeService {
     @Override
     public void eliminar(Long id) {
         if (!mensajeRepository.existsById(id)) {
-            throw new RuntimeException("Mensaje no encontrado con ID: " + id);
+            throw new MensajeNotFoundException(id);
         }
         mensajeRepository.deleteById(id);
     }
