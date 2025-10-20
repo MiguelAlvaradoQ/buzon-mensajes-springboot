@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Buzón de Mensajes - Enviar</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<main class="container">
+    <h1>Buzón de Mensajes</h1>
+    <p>Envíanos tu mensaje y lo recibiremos en el buzón.</p>
+
+    <form id="mensajeForm">
+        <div class="field">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" name="nombre" type="text" required minlength="2" maxlength="100" />
+        </div>
+
+        <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required maxlength="150" />
+        </div>
+
+        <div class="field">
+            <label for="contenido">Mensaje</label>
+            <textarea id="contenido" name="contenido" required minlength="10" maxlength="1000" rows="6"></textarea>
+        </div>
+
+        <div class="actions">
+            <button type="submit" id="submitBtn">Enviar mensaje</button>
+        </div>
+
+        <div id="feedback" class="feedback" aria-live="polite"></div>
+    </form>
+
+    <hr />
+
+    <section id="mensajesSection">
+        <h2>Mensajes recibidos</h2>
+        <div id="mensajesList" class="mensajes-list">
+            <!-- La lista se inyecta aquí -->
+            <p class="muted">Cargando mensajes...</p>
+        </div>
+    </section>
+</main>
+
+<script src="/js/app.js"></script>
+</body>
+</html>
