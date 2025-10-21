@@ -3,32 +3,32 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Buzón de Mensajes - Enviar</title>
+    <title>Contacto - Miguel Alvarado</title>
     <link rel="stylesheet" href="/css/styles.css" />
 </head>
 <body>
 <main class="container">
-    <h1>Buzón de Mensajes</h1>
-    <p>Envíanos tu mensaje y lo recibiremos en el buzón.</p>
+    <h1>📬 Buzón de Contacto</h1>
+    <p>¿Tienes alguna pregunta o propuesta? Envíame un mensaje y te responderé pronto.</p>
 
     <form id="mensajeForm">
         <div class="field">
-            <label for="nombre">Nombre</label>
-            <input id="nombre" name="nombre" type="text" required minlength="2" maxlength="100" />
+            <label for="nombre">Tu Nombre</label>
+            <input id="nombre" name="nombre" type="text" required minlength="2" maxlength="100" placeholder="Ej: Juan Pérez" />
         </div>
 
         <div class="field">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" required maxlength="150" />
+            <label for="email">Tu Email</label>
+            <input id="email" name="email" type="email" required maxlength="150" placeholder="tu@email.com" />
         </div>
 
         <div class="field">
-            <label for="contenido">Mensaje</label>
-            <textarea id="contenido" name="contenido" required minlength="10" maxlength="1000" rows="6"></textarea>
+            <label for="contenido">Tu Mensaje</label>
+            <textarea id="contenido" name="contenido" required minlength="10" maxlength="1000" rows="6" placeholder="Escribe tu mensaje aquí..."></textarea>
         </div>
 
         <div class="actions">
-            <button type="submit" id="submitBtn">Enviar mensaje</button>
+            <button type="submit" id="submitBtn">📤 Enviar mensaje</button>
         </div>
 
         <div id="feedback" class="feedback" aria-live="polite"></div>
@@ -36,15 +36,13 @@
 
     <hr />
 
-    <section id="mensajesSection">
-        <h2>Mensajes recibidos</h2>
-        <div id="mensajesList" class="mensajes-list">
-            <!-- La lista se inyecta aquí -->
-            <p class="muted">Cargando mensajes...</p>
-        </div>
-    </section>
+    <!-- Footer con enlace al panel admin (solo para ti) -->
+    <footer style="text-align: center; margin-top: 40px; color: #999; font-size: 14px;">
+        <p>© 2025 Miguel Alvarado</p>
+        <p><a href="/admin/mensajes" style="color: #666;">Panel de administración</a></p>
+    </footer>
 </main>
 
-<script src="/js/app.js"></script>
+<script src="/js/app-public.js"></script>
 </body>
 </html>

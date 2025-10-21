@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -426,4 +427,177 @@ public class MensajeController {
     public ResponseEntity<Long> contarNoLeidos() {
         return ResponseEntity.ok(mensajeService.contarNoLeidos());
     }
+
+    // Agregar estos nuevos endpoints AL FINAL de tu MensajeController.java
+
+/**
+ * =====================================================
+ * ENDPOINTS CON PAGINACIÓN
+ * =====================================================
+ */
+
+    /**
+     * Obtener todos los mensajes con paginación.
+     *
+     * Endpoint: GET /api/mensajes/paginado?page=0&size=10
+     *
+     * @param page Número de página (empieza en 0)
+     * @param size Cantidad de elementos por página
+     * @return Página de mensajes con metadata de paginación
+     */
+    @GetMapping("/paginado")
+    @Operation(
+            summary = "Obtener mensajes paginados",
+            description = """
+            Retorna los mensajes con paginación para mejorar el rendimiento.
+            
+            Los mensajes se ordenan por fecha de creación (más recientes primero).
+            
+            Parámetros:
+            - page: Número de página (0-indexed, default: 0)
+            - size: Elementos por página (default: 10, máximo recomendado: 100)
+            
+            La respuesta incluye:
+            - content: Array con los mensajes de la página actual
+            - totalElements: Total de mensajes en la BD
+            - totalPages: Total de páginas disponibles
+            - number: Página actual
+            - size: Tamaño de página
+            - first: Si es la primera página
+            - last: Si es la última página
+            """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Página de mensajes obtenida exitosamente",
+            content = @Content(
+                    mediaType = "application/json",
+                    examples = @ExampleObject(
+                            name = "Respuesta paginada",
+                            value = """
+                    {
+                      "content": [
+                        {
+                          "id": 1,
+                          "nombre": "Miguel Alvarado",
+                          "email": "miguel@example.com",
+                          "contenido": "Mensaje de ejemplo",
+                          "fechaCreacion": "2025-10-21T01:00:00",
+                          "leido": false
+                        }
+                      ],
+                      "totalElements": 50,
+                      "totalPages": 5,
+                      "number": 0,
+                      "size": 10,
+                      "first": true,
+                      "last": false
+                    }
+                    """
+                    )
+            )
+    )
+    public ResponseEntity<Page<MensajeResponseDTO>> obtenerTodosPaginado(
+            @Parameter(description = "Número de página (0-indexed)", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+
+            @Parameter(description = "Tamaño de página", example = "10")
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        // Validación del tamaño máximo
+        if (size > 100) {
+            size = 100; // Limitar a máximo 100 elementos por página
+        }
+
+        Page<MensajeResponseDTO> mensajes = mensajeService.obtenerTodosPaginado(page, size);
+        return ResponseEntity.ok(mensajes);
+    }
+
+    /**
+     * Obtener mensajes filtrados por estado con paginación.
+     *
+     * Endpoint: GET /api/mensajes/paginado/filtrado?leido=false&page=0&size=10
+     */
+    @GetMapping("/paginado/filtrado")
+    @Operation(
+            summary = "Obtener mensajes filtrados por estado con paginación",
+            description = """
+            Filtra mensajes por su estado de lectura (leído/no leído) con paginación.
+            
+            Útil para mostrar solo mensajes pendientes o ya procesados.
+            """
+    )
+    public ResponseEntity<Page<MensajeResponseDTO>> obtenerFiltradosPaginado(
+            @Parameter(description = "Filtrar por estado de lectura", example = "false")
+            @RequestParam Boolean leido,
+
+            @Parameter(description = "Número de página", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+
+            @Parameter(description = "Tamaño de página", example = "10")
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        if (size > 100) size = 100;
+
+        Page<MensajeResponseDTO> mensajes = mensajeService.obtenerNoLeidosPaginado(page, size, leido);
+        return ResponseEntity.ok(mensajes);
+    }
+
+    /**
+     * Buscar mensajes por email con paginación.
+     *
+     * Endpoint: GET /api/mensajes/paginado/email/{email}?page=0&size=10
+     */
+    @GetMapping("/paginado/email/{email}")
+    @Operation(
+            summary = "Buscar mensajes por email con paginación",
+            description = "Obtiene todos los mensajes de un email específico con soporte de paginación."
+    )
+    public ResponseEntity<Page<MensajeResponseDTO>> obtenerPorEmailPaginado(
+            @Parameter(description = "Email del remitente", example = "miguel@example.com")
+            @PathVariable String email,
+
+            @Parameter(description = "Número de página", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+
+            @Parameter(description = "Tamaño de página", example = "10")
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        if (size > 100) size = 100;
+
+        Page<MensajeResponseDTO> mensajes = mensajeService.obtenerPorEmailPaginado(email, page, size);
+        return ResponseEntity.ok(mensajes);
+    }
+
+    /**
+     * Buscar mensajes por palabra en el contenido con paginación.
+     *
+     * Endpoint: GET /api/mensajes/paginado/buscar?q=proyecto&page=0&size=10
+     */
+    @GetMapping("/paginado/buscar")
+    @Operation(
+            summary = "Buscar mensajes por contenido con paginación",
+            description = """
+            Busca mensajes que contengan una palabra específica en su contenido.
+            
+            La búsqueda es case-sensitive.
+            """
+    )
+    public ResponseEntity<Page<MensajeResponseDTO>> buscarPorContenidoPaginado(
+            @Parameter(description = "Palabra a buscar en el contenido", example = "proyecto")
+            @RequestParam("q") String palabra,
+
+            @Parameter(description = "Número de página", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+
+            @Parameter(description = "Tamaño de página", example = "10")
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        if (size > 100) size = 100;
+
+        Page<MensajeResponseDTO> mensajes = mensajeService.buscarPorContenido(palabra, page, size);
+        return ResponseEntity.ok(mensajes);
+    }
+
+
 }

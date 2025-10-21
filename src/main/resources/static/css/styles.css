@@ -107,3 +107,52 @@ button.small { padding:6px 10px; border-radius:6px; background:#2b8bd3; color:#f
 button.small.danger { background:#c62828; }
 .badge { background:#e8f5e9; color:#2e7d32; padding:4px 8px; border-radius:999px; font-weight:600; font-size:12px; }
 .muted { color:#6b7280; }
+
+/* ===== ESTILOS PARA PAGINACIÓN ===== */
+.paginacion {
+    margin-top: 20px;
+    padding: 16px;
+    background: var(--card);
+    border-radius: 8px;
+    border: 1px solid #e6eef8;
+}
+
+.paginacion-info {
+    text-align: center;
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.paginacion-controles {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.paginacion-controles button {
+    min-width: 40px;
+}
+
+.paginacion-controles button.active {
+    background: #1a6ba8;
+    font-weight: 700;
+}
+
+.paginacion-controles button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Responsive para paginación */
+@media (max-width: 768px) {
+    .paginacion-controles {
+        gap: 4px;
+    }
+
+    .paginacion-controles button {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+}

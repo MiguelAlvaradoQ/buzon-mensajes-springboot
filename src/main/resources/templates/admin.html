@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Panel Admin - Mensajes</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .logout-btn {
+      background: #c62828;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .stat-card h3 {
+      margin: 0 0 10px 0;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    .stat-card .number {
+      font-size: 36px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+<main class="container">
+  <div class="admin-header">
+    <h1>📊 Panel de Administración</h1>
+    <form method="post" action="/logout" style="margin: 0;">
+      <button type="submit" class="logout-btn">🚪 Cerrar sesión</button>
+    </form>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="stats">
+    <div class="stat-card">
+      <h3>Total de Mensajes</h3>
+      <div class="number" id="totalMensajes">-</div>
+    </div>
+    <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+      <h3>No Leídos</h3>
+      <div class="number" id="noLeidos">-</div>
+    </div>
+    <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+      <h3>Leídos</h3>
+      <div class="number" id="leidos">-</div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div style="margin-bottom: 20px;">
+    <button class="small" onclick="filtrarMensajes('all')">Todos</button>
+    <button class="small" onclick="filtrarMensajes('unread')">No leídos</button>
+    <button class="small" onclick="filtrarMensajes('read')">Leídos</button>
+  </div>
+
+  <div id="feedback" class="feedback" aria-live="polite"></div>
+
+  <!-- Lista de mensajes -->
+  <section id="mensajesSection">
+    <h2>📬 Mensajes recibidos</h2>
+    <div id="mensajesList" class="mensajes-list">
+      <p class="muted">Cargando mensajes...</p>
+    </div>
+    <div id="paginacion" class="paginacion"></div>
+  </section>
+</main>
+
+<script src="/js/app-admin.js"></script>
+</body>
+</html>

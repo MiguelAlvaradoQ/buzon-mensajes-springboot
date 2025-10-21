@@ -6,6 +6,10 @@ import com.miguel.buzon_mensajes.model.Mensaje;
 import com.miguel.buzon_mensajes.repository.MensajeRepository;
 import com.miguel.buzon_mensajes.service.MensajeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +25,80 @@ public class MensajeServiceImpl implements MensajeService {
 
     private final MensajeRepository mensajeRepository;
 
+    // ===== MÉTODOS CON PAGINACIÓN (NUEVOS) =====
+
+    /**
+     * Obtener todos los mensajes con paginación.
+     *
+     * Ordenados por fecha de creación descendente (más recientes primero).
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<MensajeResponseDTO> obtenerTodosPaginado(int page, int size) {
+        // Crear Pageable con ordenamiento
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("fechaCreacion").descending()
+        );
+
+        // Obtener página de mensajes
+        Page<Mensaje> mensajes = mensajeRepository.findAll(pageable);
+
+        // Convertir Page<Mensaje> a Page<MensajeResponseDTO>
+        return mensajes.map(this::convertirAResponseDTO);
+    }
+
+    /**
+     * Obtener mensajes filtrados por estado con paginación.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<MensajeResponseDTO> obtenerNoLeidosPaginado(int page, int size, Boolean leido) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("fechaCreacion").descending()
+        );
+
+        Page<Mensaje> mensajes = mensajeRepository.findByLeido(leido, pageable);
+        return mensajes.map(this::convertirAResponseDTO);
+    }
+
+    /**
+     * Obtener mensajes por email con paginación.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<MensajeResponseDTO> obtenerPorEmailPaginado(String email, int page, int size) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("fechaCreacion").descending()
+        );
+
+        Page<Mensaje> mensajes = mensajeRepository.findByEmail(email, pageable);
+        return mensajes.map(this::convertirAResponseDTO);
+    }
+
+    /**
+     * Buscar mensajes por palabra en el contenido con paginación.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<MensajeResponseDTO> buscarPorContenido(String palabra, int page, int size) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("fechaCreacion").descending()
+        );
+
+        Page<Mensaje> mensajes = mensajeRepository.findByContenidoContaining(palabra, pageable);
+        return mensajes.map(this::convertirAResponseDTO);
+    }
+
+    // ===== MÉTODOS SIN PAGINACIÓN (MANTENER) =====
+
     @Override
     public MensajeResponseDTO crear(MensajeRequestDTO request) {
         Mensaje mensaje = new Mensaje();
@@ -30,7 +108,6 @@ public class MensajeServiceImpl implements MensajeService {
         mensaje.setLeido(false);
 
         Mensaje guardado = mensajeRepository.save(mensaje);
-
         return convertirAResponseDTO(guardado);
     }
 
@@ -95,6 +172,7 @@ public class MensajeServiceImpl implements MensajeService {
         return mensajeRepository.countByLeido(false);
     }
 
+    // ===== MÉTODOS PRIVADOS =====
 
     private MensajeResponseDTO convertirAResponseDTO(Mensaje mensaje) {
         MensajeResponseDTO dto = new MensajeResponseDTO();

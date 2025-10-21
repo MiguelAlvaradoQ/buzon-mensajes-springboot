@@ -1,6 +1,8 @@
 package com.miguel.buzon_mensajes.repository;
 
 import com.miguel.buzon_mensajes.model.Mensaje;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,27 +12,37 @@ import java.util.List;
 @Repository
 public interface MensajeRepository extends JpaRepository<Mensaje, Long> {
 
-    // Método personalizado: buscar mensajes no leídos
+    // ===== MÉTODOS CON PAGINACIÓN =====
+
+    /**
+     * Obtener todos los mensajes con paginación.
+     * Ya viene incluido en JpaRepository, no necesitas declararlo.
+     * Uso: repository.findAll(PageRequest.of(0, 10))
+     */
+
+    /**
+     * Buscar mensajes por estado de leído con paginación.
+     */
+    Page<Mensaje> findByLeido(Boolean leido, Pageable pageable);
+
+    /**
+     * Buscar mensajes por email con paginación.
+     */
+    Page<Mensaje> findByEmail(String email, Pageable pageable);
+
+    /**
+     * Buscar mensajes por contenido con paginación.
+     */
+    Page<Mensaje> findByContenidoContaining(String palabra, Pageable pageable);
+
+    // ===== MÉTODOS SIN PAGINACIÓN (mantener para casos específicos) =====
+
     List<Mensaje> findByLeido(Boolean leido);
-
-    // Método personalizado: buscar por email
     List<Mensaje> findByEmail(String email);
-
-    // Método personalizado: contar mensajes no leídos
     Long countByLeido(Boolean leido);
-
-    // Buscar por nombre (case insensitive)
     List<Mensaje> findByNombreIgnoreCase(String nombre);
-
-    // Buscar por email Y leído
     List<Mensaje> findByEmailAndLeido(String email, Boolean leido);
-
-    // Buscar mensajes con contenido que contiene una palabra
     List<Mensaje> findByContenidoContaining(String palabra);
-
-    // Buscar mensajes creados después de una fecha
     List<Mensaje> findByFechaCreacionAfter(LocalDateTime fecha);
-
-    // Buscar los primeros 10 no leídos
     List<Mensaje> findTop10ByLeidoOrderByFechaCreacionDesc(Boolean leido);
 }

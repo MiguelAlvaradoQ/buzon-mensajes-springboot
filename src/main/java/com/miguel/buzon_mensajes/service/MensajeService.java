@@ -2,32 +2,45 @@ package com.miguel.buzon_mensajes.service;
 
 import com.miguel.buzon_mensajes.dto.MensajeRequestDTO;
 import com.miguel.buzon_mensajes.dto.MensajeResponseDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface MensajeService {
 
-    // Crear un nuevo mensaje
+    // ===== MÉTODOS CON PAGINACIÓN (NUEVOS) =====
+
+    /**
+     * Obtener mensajes paginados.
+     * @param page Número de página (0-indexed)
+     * @param size Cantidad de elementos por página
+     * @return Página de mensajes
+     */
+    Page<MensajeResponseDTO> obtenerTodosPaginado(int page, int size);
+
+    /**
+     * Obtener mensajes no leídos paginados.
+     */
+    Page<MensajeResponseDTO> obtenerNoLeidosPaginado(int page, int size, Boolean leido);
+
+    /**
+     * Obtener mensajes por email paginados.
+     */
+    Page<MensajeResponseDTO> obtenerPorEmailPaginado(String email, int page, int size);
+
+    /**
+     * Buscar mensajes por palabra en contenido (paginado).
+     */
+    Page<MensajeResponseDTO> buscarPorContenido(String palabra, int page, int size);
+
+    // ===== MÉTODOS SIN PAGINACIÓN (MANTENER) =====
+
     MensajeResponseDTO crear(MensajeRequestDTO request);
-
-    // Obtener todos los mensajes
     List<MensajeResponseDTO> obtenerTodos();
-
-    // Obtener un mensaje por ID
     MensajeResponseDTO obtenerPorId(Long id);
-
-    // Obtener mensajes no leídos
     List<MensajeResponseDTO> obtenerNoLeidos();
-
-    // Obtener mensajes por email
     List<MensajeResponseDTO> obtenerPorEmail(String email);
-
-    // Marcar mensaje como leído
     MensajeResponseDTO marcarComoLeido(Long id);
-
-    // Eliminar un mensaje
     void eliminar(Long id);
-
-    // Contar mensajes no leídos
     Long contarNoLeidos();
 }
